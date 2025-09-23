@@ -1,0 +1,33 @@
+model_path: "models/demo_model.pkl"
+
+use_live_news: true
+use_live_sentiment: true
+use_live_financials: true   # live fundamentals ON
+
+# Used by src/ipobot/data/lookup.py (root-level is preferred)
+symbol_lookup:
+  provider: "finnhub"
+  api_key: "d2baa49r01qrj4il2cmgd2baa49r01qrj4il2cn0"
+
+sentiment:
+  provider: "local"          # or "hf"
+  model: "ProsusAI/finbert"
+  max_len: 128
+
+news:
+  provider: "gnews"
+  api_key: "2d6fd8f90d31c3dab019691fa19cb75e"
+  language: "en"
+  page_size: 8
+
+financials:
+  provider: "hybrid"         # uses FMP -> AlphaVantage -> NSE -> yfinance (and Finnhub if added)
+  peer_symbols: []           # e.g., ["JUBLFOOD.NS", "WESTLIFE.NS"]
+
+thresholds:
+  buy_prob: 0.62
+  hold_prob: 0.45
+
+valuation_weights:
+  pe_under_peer_bonus: 0.15
+  roe_bonus: 0.1
