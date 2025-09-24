@@ -1,12 +1,9 @@
 
-# src/ipobot/app/cli.py
-
-# --- fix imports when run directly ---
 import sys, pathlib
-SRC = pathlib.Path(__file__).resolve().parents[2]  # .../src
+SRC = pathlib.Path(__file__).resolve().parents[2] 
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
-# --------------------------------------
+
 
 from ipobot.pipeline import run_pipeline
 from ipobot.data.lookup import resolve_symbol
