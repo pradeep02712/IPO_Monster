@@ -1,4 +1,4 @@
-# src/ipobot/data/ipo_calendar.py
+
 from __future__ import annotations
 from typing import List, Dict
 import requests, datetime as dt
@@ -10,7 +10,7 @@ def _clean(text: str) -> str:
     return " ".join((text or "").split()).strip()
 
 def _parse_dates(d: str) -> str | None:
-    # tries to keep an ISO-ish string
+   
     try:
         return str(dt.datetime.strptime(d.strip(), "%d %b %Y").date())
     except Exception:
@@ -33,14 +33,14 @@ def fetch_chittorgarh() -> List[Dict]:
             if len(tds) < 6: 
                 continue
             name = tds[0]
-            # Usually columns: Company, Issue Size, Open, Close, Price Band, Min Lot ...
+           
             open_dt = _parse_dates(tds[2]) if tds[2] else None
             close_dt = _parse_dates(tds[3]) if tds[3] else None
             price_band = tds[4] or None
             lot = tds[5] or None
             items.append({
                 "name": name,
-                "symbol": None,              # not always available here
+                "symbol": None,              
                 "open_date": open_dt,
                 "close_date": close_dt,
                 "price_band": price_band,
@@ -92,7 +92,7 @@ def merge_and_dedupe(lists: List[List[Dict]]) -> List[Dict]:
             if key not in out:
                 out[key] = it
             else:
-                # prefer earliest open date, fill missing fields
+                
                 cur = out[key]
                 for k, v in it.items():
                     if not cur.get(k) and v:
@@ -113,5 +113,5 @@ def fetch_upcoming_ipos() -> List[Dict]:
     if not items:
         return []
     merged = merge_and_dedupe([items])
-    # optional: filter only where open/close present or open in next 60d
+    
     return merged
