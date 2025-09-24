@@ -2,7 +2,7 @@
 
 Personal-use prototype to analyze IPOs: aggregate news, compute fundamentals, run sentiment, and output a Buy/Hold/Avoid decision with reasoning.
 
-> Note: Ships with simulated data and safe defaults. Flip `config.yaml` flags to enable live sources once you add your own API keys.
+
 
 ## Quickstart
 
