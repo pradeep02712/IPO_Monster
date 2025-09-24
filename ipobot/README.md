@@ -1,4 +1,4 @@
-# IPOBot (IPOMONSTER)
+# IPOMONSTER
 
 Personal-use prototype to analyze IPOs: aggregate news, compute fundamentals, run sentiment, and output a Buy/Hold/Avoid decision with reasoning.
 
