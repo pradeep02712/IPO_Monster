@@ -20,35 +20,7 @@ python -m ipobot --symbol ABC --query "ABC IPO latest news"
 streamlit run src/ipobot/app/streamlit_app.py
 ```
 
-## Project Layout
 
-```
-ipobot/
-├── src/ipobot/
-│   ├── app/
-│   │   ├── cli.py
-│   │   └── streamlit_app.py
-│   ├── data/
-│   │   ├── news_scraper.py
-│   │   ├── financial_api.py
-│   │   └── drhp_extractor.py
-│   ├── fundamentals/
-│   │   └── ratios.py
-│   ├── model/
-│   │   └── predict.py
-│   ├── nlp/
-│   │   └── sentiment.py
-│   ├── engine/
-│   │   └── reasoning.py
-│   ├── scripts/
-│   │   └── train_demo.py
-│   ├── pipeline.py
-│   ├── config.py
-│   └── __main__.py
-├── config.yaml
-├── requirements.txt
-└── LICENSE
-```
 
 ## Architecture (ASCII)
 
@@ -87,13 +59,6 @@ ipobot/
          ▼
    Buy/Hold/Avoid + Why
 
-## Configuration
-
-Edit `config.yaml`:
-- `use_live_news`: enable real news when you add API keys
-- `use_live_financials`: enable real fundamentals (e.g., Yahoo/Finnhub)
-- `thresholds`: tweak cutoffs for Buy/Hold/Avoid
-- `model_path`: where the trained demo model is stored
 
 ## Legal
 
