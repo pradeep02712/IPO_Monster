@@ -1,11 +1,8 @@
-# src/ipobot/app/streamlit_app.py
 
-# --- make imports work when Streamlit runs this file directly ---
 import sys, pathlib
-SRC = pathlib.Path(__file__).resolve().parents[2]  # .../src
+SRC = pathlib.Path(__file__).resolve().parents[2] 
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
-# ----------------------------------------------------------------
 
 import json
 import re
@@ -20,7 +17,7 @@ st.set_page_config(page_title="IPOBot (IPOMONSTER)", page_icon="📈", layout="w
 st.title("IPOBot — Personal Prototype")
 st.caption("Type an IPO name or pick from 'Upcoming IPOs'. I’ll fetch news, run sentiment + fundamentals, and recommend Buy/Hold/Avoid.")
 
-# ======================= SIDEBAR (thresholds) =======================
+
 st.sidebar.header("⚙️ Thresholds")
 buy_thr = st.sidebar.slider("Buy threshold (prob)", 0.50, 0.90, 0.62, 0.01)
 hold_thr = st.sidebar.slider("Hold threshold (prob)", 0.30, buy_thr, 0.45, 0.01)
@@ -32,18 +29,18 @@ def decide(prob: float, buy_t: float, hold_t: float):
         return "HOLD"
     return "AVOID"
 
-# ---------- helpers ----------
-_TICKER_RE = re.compile(r"^[A-Z][A-Z0-9\-\.]{0,9}$")  # simple, permissive
+
+_TICKER_RE = re.compile(r"^[A-Z][A-Z0-9\-\.]{0,9}$")  
 
 def looks_like_ticker(s: str) -> bool:
     """Treat raw input as a ticker if it's clearly a ticker (keeps TSLA/AAPL/RELIANCE.NS as-is)."""
     if not s:
         return False
     s = s.strip()
-    # If contains '.' or ':' (suffix/exchange) it's definitely a ticker
+    
     if "." in s or ":" in s:
         return True
-    # All caps & short & alnum/hyphen => very likely a ticker
+    
     return bool(_TICKER_RE.match(s.upper()))
 
 def normalize_fundamentals(f: dict) -> dict:
@@ -65,7 +62,7 @@ def normalize_fundamentals(f: dict) -> dict:
         "P/E discount vs peer (%)": pick("P/E discount vs peer (%)", "pe_discount_vs_peer"),
     }
 
-    # If discount is a fraction (0.12), display as %
+    
     d = out["P/E discount vs peer (%)"]
     try:
         if d is not None:
@@ -74,7 +71,7 @@ def normalize_fundamentals(f: dict) -> dict:
     except Exception:
         pass
 
-    # Round nicely
+   
     for k, v in list(out.items()):
         try:
             if v is not None:
@@ -88,14 +85,14 @@ def format_peer_gap(pe: float | None, peer: float | None):
     try:
         if pe in (None, 0) or peer in (None, 0):
             return None, None
-        frac = 1 - (float(pe) / float(peer))  # +ve=discount, -ve=premium
+        frac = 1 - (float(pe) / float(peer)) 
         pct = round(frac * 100, 2)
         label = "P/E discount vs peer" if pct >= 0 else "P/E premium vs peer"
         return label, abs(pct)
     except Exception:
         return None, None
 
-# ======================= QUICK ANALYZE (single name) =======================
+
 st.subheader("🔎 Quick analyze by IPO name")
 ipo_name = st.text_input("IPO name or ticker", placeholder="e.g., OYO, LICI.NS, Zomato, TSLA, AAPL").strip()
 colA, colB = st.columns([1, 3])
@@ -106,7 +103,7 @@ if run_click:
     sym = None
     learned = False
 
-    # IMPORTANT: if the user typed a ticker, skip lookup (prevents TSLA -> TSLA.NS)
+    
     if looks_like_ticker(raw):
         sym = raw.upper()
     else:
@@ -140,7 +137,7 @@ if run_click:
 
     st.divider()
 
-    # Reasoning + Fundamentals
+   
     left, right = st.columns([1.3, 1])
     with left:
         st.subheader("🧠 Why")
@@ -157,7 +154,7 @@ if run_click:
         st.subheader("📊 Fundamentals")
         f_ui = normalize_fundamentals(res.get("fundamentals", {}))
 
-        # Friendlier label for peer comparison
+       
         gap_label, gap_val = format_peer_gap(f_ui.get("P/E"), f_ui.get("Peer P/E"))
         if gap_label is not None:
             f_ui[gap_label + " (%)"] = gap_val
@@ -176,7 +173,7 @@ if run_click:
         st.write("Warnings:", res.get("warnings", []))
         st.write("Errors:", res.get("errors", []))
 
-# ======================= UPCOMING IPOs SECTION =======================
+
 st.subheader("📅 Upcoming IPOs (auto-fetched)")
 try:
     cal_items = fetch_upcoming_ipos()
@@ -199,7 +196,7 @@ else:
             it = cal_items[idx]
             ipo = it.get("name", "").strip()
 
-            # Resolve symbol: mapping -> API-learned -> calendar symbol -> sanitized fallback
+            
             sym, learned = resolve_symbol(ipo)
             if sym is None:
                 sym = it.get("symbol") or suggest_symbol(ipo)
@@ -215,7 +212,7 @@ else:
                     sym,
                     query,
                     override_thresholds={"buy_prob": buy_thr, "hold_prob": hold_thr},
-                    symbol_is_final=True,   # <<--- add this
+                    symbol_is_final=True,  
                 )
 
 
@@ -235,7 +232,7 @@ else:
                 st.write("Warnings:", res.get("warnings", []))
                 st.write("Errors:", res.get("errors", []))
 
-# ======================= Mapping helper =======================
+
 with st.expander("✏️ Edit IPO name → symbol mappings"):
     st.write(
         "Auto-learned mappings are saved to `src/ipobot/data/mappings.json`.\n"
