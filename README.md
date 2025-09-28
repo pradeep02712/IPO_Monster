@@ -24,3 +24,4 @@ python -m ipobot --symbol ABC --query "ABC IPO latest news"
 # (Optional) Run Streamlit UI
 streamlit run src/ipobot/app/streamlit_app.py
 
+![image.png](attachment:01f81a6c-9564-435c-b0b8-58e406808098:image.png)
